@@ -1,0 +1,13 @@
+{
+  "name": "fll-semaforo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Semaforo de mesas para arbitraje de Juego de Robot - FLL",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  }
+}

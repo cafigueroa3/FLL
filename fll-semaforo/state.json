@@ -1,0 +1,17 @@
+{
+  "numMesas": 8,
+  "tables": {
+    "2": {
+      "light": "amarillo",
+      "updatedAt": 1784164726159
+    },
+    "6": {
+      "light": "verde",
+      "updatedAt": 1784164732709
+    },
+    "7": {
+      "light": "verde",
+      "updatedAt": 1784165259052
+    }
+  }
+}
