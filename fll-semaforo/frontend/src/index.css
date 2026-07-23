@@ -1,11 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap');
+
 :root {
-  --slate-100: #f1f5f9;
-  --slate-200: #e2e8f0;
-  --slate-400: #94a3b8;
-  --slate-500: #64748b;
-  --slate-600: #475569;
-  --slate-700: #334155;
-  --slate-800: #1e293b;
+  /* Paleta inspirada en el logo FIRST LEGO League */
+  --brand-red: #ED1B2E;
+  --brand-red-dark: #C4121F;
+  --brand-blue: #0072CE;
+  --brand-blue-dark: #00539B;
+  --brand-gray: #8A8D8F;
+  --brand-gray-dark: #58595B;
+  --brand-black: #1A1A1A;
+
+  --slate-100: #f2f3f4;
+  --slate-200: #e2e4e5;
+  --slate-400: #9a9d9f;
+  --slate-500: #75787a;
+  --slate-600: #58595b;
+  --slate-700: #3a3b3c;
+  --slate-800: #1a1a1a;
 
   --green-50: #f0fdf4;
   --green-300: #86efac;
@@ -21,9 +32,9 @@
   --red-50: #fef2f2;
   --red-200: #fecaca;
   --red-300: #fca5a5;
-  --red-500: #ef4444;
-  --red-600: #dc2626;
-  --red-700: #b91c1c;
+  --red-500: var(--brand-red);
+  --red-600: var(--brand-red-dark);
+  --red-700: #8f0f1a;
 }
 
 * {
@@ -38,10 +49,10 @@ body,
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+  font-family: "Barlow", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Helvetica, Arial, sans-serif;
   background: var(--slate-100);
-  color: var(--slate-800);
+  color: var(--brand-black);
 }
 
 button {
@@ -56,11 +67,13 @@ button {
 }
 
 .offline-banner {
-  background: var(--red-600);
+  background: var(--brand-red);
   color: white;
   font-size: 12px;
   text-align: center;
   padding: 4px 0;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .page {
@@ -75,20 +88,53 @@ button {
   justify-content: center;
 }
 
+/* --- Marca / branding --- */
+.brand-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.brand-logo {
+  height: 40px;
+  width: auto;
+  flex-shrink: 0;
+}
+.brand-mark-text {
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: 0.01em;
+  font-size: 15px;
+  color: var(--brand-black);
+  text-transform: uppercase;
+  line-height: 1;
+}
+.brand-mark-text span {
+  color: var(--brand-red);
+}
+
 /* Home */
 .home-header {
   text-align: center;
   margin-bottom: 32px;
 }
 .home-title {
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0 0 8px;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 34px;
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  margin: 0 0 10px;
+  color: var(--brand-black);
 }
 .home-subtitle {
   color: var(--slate-500);
   max-width: 380px;
   margin: 0 auto;
+  font-size: 15px;
 }
 
 .home-grid {
@@ -106,33 +152,53 @@ button {
 
 .role-card {
   background: white;
-  border: 1px solid var(--slate-200);
-  border-radius: 16px;
+  border: 2px solid var(--slate-200);
+  border-radius: 14px;
   padding: 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
   transition: all 0.15s ease;
+  border-top-width: 5px;
+}
+.role-card.role-referee {
+  border-top-color: var(--brand-blue);
+}
+.role-card.role-head {
+  border-top-color: var(--brand-red);
 }
 .role-card:hover {
   border-color: var(--slate-400);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-top-color: inherit;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 .role-badge {
   width: 56px;
   height: 56px;
   border-radius: 999px;
-  background: var(--slate-800);
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 20px;
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 800;
+  font-style: italic;
+  font-size: 22px;
+}
+.role-referee .role-badge {
+  background: var(--brand-blue);
+}
+.role-head .role-badge {
+  background: var(--brand-red);
 }
 .role-title {
-  font-weight: 600;
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
 }
 .role-desc {
   font-size: 14px;
@@ -157,17 +223,22 @@ button {
   height: 36px;
   border-radius: 999px;
   background: white;
-  border: 1px solid var(--slate-200);
+  border: 2px solid var(--slate-200);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .icon-btn:hover {
   background: var(--slate-100);
+  border-color: var(--brand-blue);
 }
 .topbar-title {
-  font-size: 18px;
-  font-weight: 600;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
   margin: 0;
 }
 
@@ -186,13 +257,15 @@ button {
   height: 64px;
   border-radius: 12px;
   background: white;
-  border: 1px solid var(--slate-200);
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--slate-700);
+  border: 2px solid var(--slate-200);
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  font-style: italic;
+  color: var(--brand-blue-dark);
 }
 .mesa-btn:hover {
-  border-color: var(--slate-500);
+  border-color: var(--brand-blue);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
@@ -221,8 +294,12 @@ button {
   text-align: center;
 }
 .status-label {
-  font-size: 18px;
-  font-weight: 600;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
 }
 .status-time {
   font-size: 12px;
@@ -245,8 +322,12 @@ button {
   border-radius: 12px;
   border: 2px solid transparent;
   background: white;
-  font-weight: 600;
-  font-size: 16px;
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  font-size: 17px;
 }
 .light-btn svg {
   width: 24px;
@@ -311,7 +392,7 @@ button {
 /* Head view */
 .settings-panel {
   background: white;
-  border: 1px solid var(--slate-200);
+  border: 2px solid var(--slate-200);
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 16px;
@@ -323,36 +404,48 @@ button {
 .settings-panel label {
   font-size: 14px;
   color: var(--slate-600);
+  font-weight: 600;
 }
 .settings-panel input {
   width: 70px;
-  border: 1px solid var(--slate-200);
+  border: 2px solid var(--slate-200);
   border-radius: 8px;
   padding: 6px 8px;
   font-size: 14px;
 }
 .btn-primary {
-  background: var(--slate-800);
+  background: var(--brand-blue);
   color: white;
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
   font-size: 14px;
-  padding: 8px 14px;
+  padding: 8px 16px;
   border-radius: 8px;
   border: none;
 }
 .btn-primary:hover {
-  background: var(--slate-700);
+  background: var(--brand-blue-dark);
 }
 .btn-danger-outline {
   margin-left: auto;
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
   font-size: 14px;
-  color: var(--red-600);
+  color: var(--brand-red);
   background: white;
-  border: 1px solid var(--red-200);
-  padding: 8px 14px;
+  border: 2px solid var(--red-200);
+  padding: 8px 16px;
   border-radius: 8px;
 }
 .btn-danger-outline:hover {
   background: var(--red-50);
+  border-color: var(--brand-red);
 }
 
 .summary-row {
@@ -362,9 +455,10 @@ button {
   font-size: 14px;
 }
 .pill {
-  padding: 4px 12px;
+  padding: 4px 14px;
   border-radius: 999px;
-  border: 1px solid;
+  border: 2px solid;
+  font-weight: 600;
 }
 .pill.amarillo {
   background: var(--yellow-50);
@@ -425,12 +519,17 @@ button {
   }
 }
 .table-card-label {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--slate-500);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
 }
 .table-card-num {
-  font-size: 24px;
-  font-weight: 700;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  font-style: italic;
 }
 .table-card-icon {
   width: 40px;
@@ -445,8 +544,12 @@ button {
   height: 20px;
 }
 .table-card-status {
-  font-size: 12px;
-  font-weight: 600;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
 }
 .table-card-time {
   font-size: 11px;

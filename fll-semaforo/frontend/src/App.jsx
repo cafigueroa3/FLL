@@ -72,6 +72,20 @@ function SettingsIcon({ className }) {
   );
 }
 
+function BrandMark() {
+  return (
+    <div className="brand-mark">
+      <img src="/logo.png" alt="Logo FIRST LEGO League" className="brand-logo" />
+
+      <div className="brand-mark-text">
+        Juego de robot
+        <br />
+        <span>Arbitraje FLL</span>
+      </div>
+    </div>
+  );
+}
+
 function mesaLabel(n) {
   // 1 -> A, 2 -> B, ... 27 -> AA (por si acaso se configuran muchas mesas)
   let label = "";
@@ -149,7 +163,8 @@ function Home({ setView }) {
   return (
     <div className="page center">
       <div className="home-header">
-        <h1 className="home-title">Semáforo de Mesas — FLL</h1>
+        <BrandMark />
+        <h1 className="home-title">Semáforo de Mesas</h1>
         <p className="home-subtitle">
           Juego de Robot: indica el estado de tu mesa o supervisa todas las
           mesas desde una sola pantalla.
@@ -157,7 +172,7 @@ function Home({ setView }) {
       </div>
 
       <div className="home-grid">
-        <button className="role-card" onClick={() => setView("referee")}>
+        <button className="role-card role-referee" onClick={() => setView("referee")}>
           <div className="role-badge">M</div>
           <div>
             <div className="role-title">Soy árbitro de mesa</div>
@@ -165,7 +180,7 @@ function Home({ setView }) {
           </div>
         </button>
 
-        <button className="role-card" onClick={() => setView("head")}>
+        <button className="role-card role-head" onClick={() => setView("head")}>
           <div className="role-badge">G</div>
           <div>
             <div className="role-title">Soy árbitro general</div>
