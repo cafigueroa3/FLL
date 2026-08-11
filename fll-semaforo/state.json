@@ -1,0 +1,37 @@
+{
+  "numMesas": 10,
+  "tables": {
+    "1": {
+      "light": "rojo",
+      "updatedAt": 1786395639168
+    },
+    "2": {
+      "light": "rojo",
+      "updatedAt": 1786395639168
+    },
+    "3": {
+      "light": "rojo",
+      "updatedAt": 1786395639168
+    },
+    "4": {
+      "light": "rojo",
+      "updatedAt": 1786395639168
+    },
+    "5": {
+      "light": "rojo",
+      "updatedAt": 1786395639168
+    },
+    "6": {
+      "light": "rojo",
+      "updatedAt": 1786395639168
+    },
+    "7": {
+      "light": "rojo",
+      "updatedAt": 1786395639168
+    },
+    "8": {
+      "light": "rojo",
+      "updatedAt": 1786395639168
+    }
+  }
+}

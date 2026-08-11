@@ -5,6 +5,33 @@ const fs = require("fs");
 const os = require("os");
 const { Server } = require("socket.io");
 
+// Carga variables desde un archivo .env en esta misma carpeta, si existe
+// (ese archivo va en .gitignore, no se sube al repo). No agrega ninguna
+// dependencia nueva: solo entiende líneas "CLAVE=valor", que es todo lo que
+// este proyecto necesita. En Railway esto no hace nada (no hay .env en el
+// deploy) — ahí la variable se define directo en su panel de Variables.
+function loadEnvFile() {
+  const envPath = path.join(__dirname, ".env");
+  if (!fs.existsSync(envPath)) return;
+  const lines = fs.readFileSync(envPath, "utf-8").split("\n");
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    const idx = trimmed.indexOf("=");
+    if (idx === -1) continue;
+    const key = trimmed.slice(0, idx).trim();
+    let value = trimmed.slice(idx + 1).trim();
+    if (
+      (value.startsWith('"') && value.endsWith('"')) ||
+      (value.startsWith("'") && value.endsWith("'"))
+    ) {
+      value = value.slice(1, -1);
+    }
+    if (!(key in process.env)) process.env[key] = value;
+  }
+}
+loadEnvFile();
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
@@ -13,6 +40,12 @@ const STATE_FILE = path.join(__dirname, "state.json");
 const DIST_DIR = path.join(__dirname, "frontend", "dist");
 const DEFAULT_NUM_MESAS = 8;
 const VALID_LIGHTS = ["verde", "amarillo", "rojo"];
+
+// Contraseña para entrar como "árbitro general" (ver vista y reiniciar/mesas).
+// Se puede definir en fll-semaforo/.env (HEAD_PASSWORD=tu_contraseña) para
+// desarrollo local, o como variable de entorno HEAD_PASSWORD en Railway para
+// producción. Si no se define en ningún lado, usa el valor por defecto.
+const HEAD_PASSWORD = process.env.HEAD_PASSWORD || "fll2026";
 
 function loadState() {
   try {
@@ -52,7 +85,17 @@ app.get(/(.*)/, (req, res) => {
 });
 
 io.on("connection", (socket) => {
+  socket.data.isHead = false;
   socket.emit("state", state);
+
+  // El árbitro general se autentica con una contraseña compartida (sin base de
+  // datos). Mientras el socket no esté marcado como "isHead", el servidor
+  // ignora los eventos de administración (setNumMesas, resetAll).
+  socket.on("authHead", (password, ack) => {
+    const ok = typeof password === "string" && password === HEAD_PASSWORD;
+    socket.data.isHead = ok;
+    if (typeof ack === "function") ack(ok);
+  });
 
   socket.on("setLight", ({ mesa, light }) => {
     if (!mesa || !VALID_LIGHTS.includes(light)) return;
@@ -62,6 +105,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("setNumMesas", (numMesas) => {
+    if (!socket.data.isHead) return;
     const n = Math.max(1, Math.min(30, Number(numMesas) || DEFAULT_NUM_MESAS));
     state.numMesas = n;
     saveState(state);
@@ -69,6 +113,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("resetAll", () => {
+    if (!socket.data.isHead) return;
     for (const mesa of Object.keys(state.tables)) {
       state.tables[mesa] = { light: "rojo", updatedAt: Date.now() };
     }
@@ -101,6 +146,11 @@ server.listen(PORT, "0.0.0.0", () => {
     ips.forEach((ip) => console.log(`    http://${ip}:${PORT}`));
   } else {
     console.log("  No se detecto una IP de red local. Verifica tu conexion WiFi.");
+  }
+  if (process.env.HEAD_PASSWORD) {
+    console.log("  Password de arbitro general: definida por variable de entorno HEAD_PASSWORD");
+  } else {
+    console.log(`  Password de arbitro general (por defecto, cambiala con HEAD_PASSWORD): ${HEAD_PASSWORD}`);
   }
   console.log("");
 });

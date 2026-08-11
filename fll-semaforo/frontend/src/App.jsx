@@ -10,6 +10,7 @@ const LIGHTS = {
 };
 
 const DEFAULT_NUM_MESAS = 8;
+const HEAD_AUTH_KEY = "fll-head-password";
 
 function Icon({ kind, className }) {
   if (kind === "verde") {
@@ -110,14 +111,33 @@ function timeAgo(ts) {
 function useSharedState() {
   const [state, setState] = useState({ numMesas: DEFAULT_NUM_MESAS, tables: {} });
   const [connected, setConnected] = useState(socket.connected);
+  const [headAuthed, setHeadAuthed] = useState(false);
 
   useEffect(() => {
+    const tryAutoAuth = () => {
+      const saved = localStorage.getItem(HEAD_AUTH_KEY);
+      if (!saved) return;
+      socket.emit("authHead", saved, (ok) => {
+        setHeadAuthed(ok);
+        if (!ok) localStorage.removeItem(HEAD_AUTH_KEY);
+      });
+    };
+
     const onState = (s) => setState(s);
-    const onConnect = () => setConnected(true);
+    const onConnect = () => {
+      setConnected(true);
+      tryAutoAuth();
+    };
     const onDisconnect = () => setConnected(false);
+
     socket.on("state", onState);
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
+
+    // Si el socket ya estaba conectado antes de que este efecto se registrara,
+    // el evento "connect" no vuelve a dispararse: intentamos igual.
+    if (socket.connected) tryAutoAuth();
+
     return () => {
       socket.off("state", onState);
       socket.off("connect", onConnect);
@@ -125,12 +145,28 @@ function useSharedState() {
     };
   }, []);
 
-  return { state, connected };
+  const loginHead = (password) =>
+    new Promise((resolve) => {
+      socket.emit("authHead", password, (ok) => {
+        if (ok) {
+          localStorage.setItem(HEAD_AUTH_KEY, password);
+          setHeadAuthed(true);
+        }
+        resolve(ok);
+      });
+    });
+
+  const logoutHead = () => {
+    localStorage.removeItem(HEAD_AUTH_KEY);
+    setHeadAuthed(false);
+  };
+
+  return { state, connected, headAuthed, loginHead, logoutHead };
 }
 
 export default function App() {
   const [view, setView] = useState("home");
-  const { state, connected } = useSharedState();
+  const { state, connected, headAuthed, loginHead, logoutHead } = useSharedState();
 
   return (
     <div className="app">
@@ -143,7 +179,19 @@ export default function App() {
       {view === "referee" && (
         <RefereeView goHome={() => setView("home")} state={state} />
       )}
-      {view === "head" && <HeadView goHome={() => setView("home")} state={state} />}
+      {view === "head" &&
+        (headAuthed ? (
+          <HeadView
+            goHome={() => setView("home")}
+            state={state}
+            onLogout={() => {
+              logoutHead();
+              setView("home");
+            }}
+          />
+        ) : (
+          <HeadGate goHome={() => setView("home")} onSubmit={loginHead} />
+        ))}
     </div>
   );
 }
@@ -187,6 +235,47 @@ function Home({ setView }) {
             <div className="role-desc">Ve el estado de todas las mesas</div>
           </div>
         </button>
+      </div>
+    </div>
+  );
+}
+
+function HeadGate({ goHome, onSubmit }) {
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [checking, setChecking] = useState(false);
+
+  const submit = async (e) => {
+    e.preventDefault();
+    if (!password || checking) return;
+    setChecking(true);
+    setError("");
+    const ok = await onSubmit(password);
+    setChecking(false);
+    if (!ok) {
+      setError("Contraseña incorrecta");
+      setPassword("");
+    }
+  };
+
+  return (
+    <div className="page">
+      <TopBar title="Árbitro general" goHome={goHome} />
+      <div className="page center" style={{ padding: 0 }}>
+        <form className="auth-form" onSubmit={submit}>
+          <p className="mesa-hint">Ingresa la contraseña de árbitro general</p>
+          <input
+            type="password"
+            autoFocus
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Contraseña"
+          />
+          {error && <div className="auth-error">{error}</div>}
+          <button className="btn-primary" type="submit" disabled={checking}>
+            {checking ? "Verificando…" : "Entrar"}
+          </button>
+        </form>
       </div>
     </div>
   );
@@ -271,7 +360,7 @@ function RefereeView({ goHome, state }) {
   );
 }
 
-function HeadView({ goHome, state }) {
+function HeadView({ goHome, state, onLogout }) {
   const [showSettings, setShowSettings] = useState(false);
   const [draftNum, setDraftNum] = useState(state.numMesas);
 
@@ -318,6 +407,9 @@ function HeadView({ goHome, state }) {
           />
           <button className="btn-primary" onClick={saveNumMesas}>
             Guardar
+          </button>
+          <button className="change-mesa" type="button" onClick={onLogout}>
+            Cerrar sesión
           </button>
           <button
             className="btn-danger-outline"
