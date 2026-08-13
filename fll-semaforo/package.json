@@ -4,7 +4,8 @@
   "private": true,
   "description": "Semaforo de mesas para arbitraje de Juego de Robot - FLL",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "cd frontend && npm install && npm run build"
   },
   "dependencies": {
     "express": "^4.19.2",
