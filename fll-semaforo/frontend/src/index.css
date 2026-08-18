@@ -509,13 +509,15 @@ button {
   border-color: var(--red-500);
   background: var(--red-50);
 }
+/* La mesa que pide ayuda late con un halo, sin bajar de opacidad: ahora que
+   las mesas no se reordenan, tiene que seguir leyéndose siempre bien. */
 @keyframes pulse {
   0%,
   100% {
-    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.6);
   }
   50% {
-    opacity: 0.6;
+    box-shadow: 0 0 0 9px rgba(250, 204, 21, 0);
   }
 }
 .table-card-label {
@@ -586,4 +588,190 @@ button {
   color: var(--brand-red);
   font-size: 13px;
   font-weight: 600;
+}
+
+/* --- Subtítulo de la barra superior (nombre del torneo) --- */
+.topbar-subtitle {
+  font-size: 12px;
+  color: var(--slate-500);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin-top: 2px;
+}
+
+/* --- Botón de texto discreto --- */
+.link-btn {
+  background: none;
+  border: none;
+  color: var(--slate-500);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+  padding: 8px 4px;
+  margin-top: 12px;
+}
+.link-btn:hover {
+  color: var(--brand-blue);
+}
+.btn-block {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+/* --- Lista de torneos (pantalla de inicio) --- */
+.torneo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 520px;
+}
+.torneo-card {
+  background: white;
+  border: 2px solid var(--slate-200);
+  border-left-width: 5px;
+  border-left-color: var(--brand-blue);
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+.torneo-card:hover {
+  border-color: var(--slate-400);
+  border-left-color: var(--brand-blue);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+.torneo-card-nombre {
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  font-size: 18px;
+  color: var(--brand-black);
+}
+.torneo-card-meta {
+  font-size: 13px;
+  color: var(--slate-500);
+}
+.torneo-card-pills {
+  display: flex;
+  gap: 6px;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+/* --- Mesa guardada en este teléfono --- */
+.mesa-btn-actual {
+  border-color: var(--brand-blue);
+  box-shadow: 0 0 0 3px rgba(0, 114, 206, 0.15);
+}
+
+/* --- Administración --- */
+.admin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.admin-card {
+  background: white;
+  border: 2px solid var(--slate-200);
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.admin-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.admin-card-nombre {
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  font-size: 18px;
+}
+.admin-card-link {
+  font-size: 12px;
+  color: var(--brand-blue-dark);
+  word-break: break-all;
+  margin-top: 2px;
+}
+.admin-card-meta {
+  font-size: 13px;
+  color: var(--slate-500);
+}
+.admin-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.admin-card-actions .link-btn {
+  margin-top: 0;
+}
+.admin-card-aviso {
+  font-size: 13px;
+  color: var(--brand-blue-dark);
+  font-weight: 600;
+}
+
+.admin-form {
+  background: var(--slate-100);
+  border: 2px solid var(--slate-200);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.admin-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--slate-600);
+}
+.admin-form input {
+  border: 2px solid var(--slate-200);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 16px;
+  background: white;
+  font-family: inherit;
+}
+.admin-form input:focus {
+  outline: none;
+  border-color: var(--brand-blue);
+}
+.admin-form-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.admin-form-actions .link-btn {
+  margin-top: 0;
+}
+
+/* --- Créditos en la pantalla de inicio --- */
+.creditos {
+  margin-top: 28px;
+  font-size: 12px;
+  color: var(--slate-400);
+  text-align: center;
+  letter-spacing: 0.02em;
 }
